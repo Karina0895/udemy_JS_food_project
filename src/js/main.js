@@ -105,16 +105,19 @@ window.addEventListener('DOMContentLoaded', () => {
           modal = document.querySelector('.modal'),
           modalCloseBtn = document.querySelector('[data-close]');
 
+    function openModal() {
+        modal.classList.toggle('show');
+        document.body.style.overflow = 'hidden';
+    }
+
     modalTrigger.forEach(btn => {
-            btn.addEventListener('click', () => {
-            modal.classList.toggle('show');
-            document.body.style.overflow = 'hidden';
-        }); 
+        btn.addEventListener('click', openModal); 
     });
 
     function closeModal() {
         modal.classList.toggle('show');
         document.body.style.overflow = '';
+        clearInterval(modalTimerId);
     }
     
     modalCloseBtn.addEventListener('click', closeModal); 
@@ -130,4 +133,15 @@ window.addEventListener('DOMContentLoaded', () => {
             closeModal();
         }
     });
+
+    const modalTimerId = setTimeout(openModal, 5000);
+
+    function showModalByScroll() {
+        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+            openModal();
+            window.removeEventListener('scroll', showModalByScroll);// видаляємо обобник події після першого виконання
+        }
+    }
+
+    window.addEventListener('scroll', showModalByScroll);
 });
