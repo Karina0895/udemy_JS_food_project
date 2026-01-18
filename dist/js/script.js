@@ -194,7 +194,8 @@ window.addEventListener('DOMContentLoaded', () => {
                 margin: 0 auto;
             `;
       form.insertAdjacentElement('afterend', statusMessage);
-      request.setRequestHeader('Content-type', 'application/json');
+
+      // request.setRequestHeader('Content-type', 'application/json');
       const formData = new FormData(form); //для роботи FormData у інпутів форми завжди повинен бути атрибут name
 
       const object = {};
