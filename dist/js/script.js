@@ -2,10 +2,10 @@
 /*!************************!*\
   !*** ./src/js/main.js ***!
   \************************/
-window.addEventListener('DOMContentLoaded', () => {
-  //Tabs
+window.addEventListener('DOMContentLoaded', function () {
+  // Tabs
 
-  const tabs = document.querySelectorAll('.tabheader__item'),
+  let tabs = document.querySelectorAll('.tabheader__item'),
     tabsContent = document.querySelectorAll('.tabcontent'),
     tabsParent = document.querySelector('.tabheader__items');
   function hideTabContent() {
@@ -24,7 +24,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   hideTabContent();
   showTabContent();
-  tabsParent.addEventListener('click', event => {
+  tabsParent.addEventListener('click', function (event) {
     const target = event.target;
     if (target && target.classList.contains('tabheader__item')) {
       tabs.forEach((item, i) => {
@@ -36,24 +36,15 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  //Timer
+  // Timer
 
-  const deadline = '2025-11-12';
+  const deadline = '2026-06-11';
   function getTimeRemaining(endtime) {
-    let days, hours, minutes, seconds;
-    const t = Date.parse(endtime) - Date.parse(new Date()); // отримаємо час в мілісекундах
-
-    if (t <= 0) {
-      days = 0;
-      hours = 0;
-      minutes = 0;
-      seconds = 0;
-    } else {
-      days = Math.floor(t / (1000 * 60 * 60 * 24)); // отримаємо кількість днів
-      hours = Math.floor(t / 1000 * 60 * 60 % 24); //  отримаємо кількість годин
-      minutes = Math.floor(t / 1000 / 60 % 60); //отримаємо кількість хвилин
-      seconds = Math.floor(t / 1000 % 60);
-    }
+    const t = Date.parse(endtime) - Date.parse(new Date()),
+      days = Math.floor(t / (1000 * 60 * 60 * 24)),
+      seconds = Math.floor(t / 1000 % 60),
+      minutes = Math.floor(t / 1000 / 60 % 60),
+      hours = Math.floor(t / (1000 * 60 * 60) % 24);
     return {
       'total': t,
       'days': days,
@@ -64,20 +55,19 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   function getZero(num) {
     if (num >= 0 && num < 10) {
-      return `0${num}`;
+      return '0' + num;
     } else {
       return num;
     }
   }
   function setClock(selector, endtime) {
     const timer = document.querySelector(selector),
-      days = timer.querySelector('#days'),
+      days = timer.querySelector("#days"),
       hours = timer.querySelector('#hours'),
       minutes = timer.querySelector('#minutes'),
       seconds = timer.querySelector('#seconds'),
       timeInterval = setInterval(updateClock, 1000);
-    updateClock(); // запустили тут, щоб верстка не моргала при зміні статичних даних і наших динамічних
-
+    updateClock();
     function updateClock() {
       const t = getTimeRemaining(endtime);
       days.innerHTML = getZero(t.days);
@@ -91,25 +81,26 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   setClock('.timer', deadline);
 
-  // Modal 
+  // Modal
 
   const modalTrigger = document.querySelectorAll('[data-modal]'),
     modal = document.querySelector('.modal');
-  function openModal() {
-    modal.classList.toggle('show');
-    document.body.style.overflow = 'hidden';
-  }
   modalTrigger.forEach(btn => {
     btn.addEventListener('click', openModal);
   });
   function closeModal() {
-    modal.classList.toggle('show');
+    modal.classList.add('hide');
+    modal.classList.remove('show');
     document.body.style.overflow = '';
+  }
+  function openModal() {
+    modal.classList.add('show');
+    modal.classList.remove('hide');
+    document.body.style.overflow = 'hidden';
     clearInterval(modalTimerId);
   }
   modal.addEventListener('click', e => {
-    if (e.target === modal || e.target.getAttribute('data-close') == '') {
-      // тут строге порівняння, що таргет саме модальне вікно, а не modal-dialog
+    if (e.target === modal || e.target.getAttribute('data-close') == "") {
       closeModal();
     }
   });
@@ -118,16 +109,18 @@ window.addEventListener('DOMContentLoaded', () => {
       closeModal();
     }
   });
-  const modalTimerId = setTimeout(openModal, 50000);
+  const modalTimerId = setTimeout(openModal, 300000);
+  // Изменил значение, чтобы не отвлекало
+
   function showModalByScroll() {
     if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
       openModal();
-      window.removeEventListener('scroll', showModalByScroll); // видаляємо обобник події після першого виконання
+      window.removeEventListener('scroll', showModalByScroll);
     }
   }
   window.addEventListener('scroll', showModalByScroll);
 
-  // Використовуємо класи для карточок
+  // Используем классы для создание карточек меню
 
   class MenuCard {
     constructor(src, alt, title, descr, price, parentSelector, ...classes) {
@@ -138,7 +131,7 @@ window.addEventListener('DOMContentLoaded', () => {
       this.price = price;
       this.classes = classes;
       this.parent = document.querySelector(parentSelector);
-      this.transfer = 42;
+      this.transfer = 27;
       this.changeToUAH();
     }
     changeToUAH() {
@@ -147,8 +140,8 @@ window.addEventListener('DOMContentLoaded', () => {
     render() {
       const element = document.createElement('div');
       if (this.classes.length === 0) {
-        this.element = 'menu__item';
-        element.classList.add(this.element);
+        this.classes = "menu__item";
+        element.classList.add(this.classes);
       } else {
         this.classes.forEach(className => element.classList.add(className));
       }
@@ -165,78 +158,88 @@ window.addEventListener('DOMContentLoaded', () => {
       this.parent.append(element);
     }
   }
-  const getResource = async url => {
-    const res = await fetch(url);
-    if (!res.ok) {
-      throw new Error(`Couldn't fetch ${url}, status ${res.status}`);
-    }
-    return await res.json();
-  };
 
-  // getResource('http://localhost:3000/menu ')
+  // getResource('http://localhost:3000/menu')
   //     .then(data => {
   //         data.forEach(({img, altimg, title, descr, price}) => {
-  //             new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
+  //             new MenuCard(img, altimg, title, descr, price, ".menu .container").render();
   //         });
   //     });
 
-  getResource('http://localhost:3000/menu ').then(data => createCard(data));
-  function createCard(data) {
-    data.forEach(({
+  // getResource('http://localhost:3000/menu')
+  //     .then(data => createCard(data));
+
+  // function createCard(data) {
+  //     data.forEach(({img, altimg, title, descr, price}) => {
+  //         const element = document.createElement('div');
+
+  //         element.classList.add("menu__item");
+
+  //         element.innerHTML = `
+  //             <img src=${img} alt=${altimg}>
+  //             <h3 class="menu__item-subtitle">${title}</h3>
+  //             <div class="menu__item-descr">${descr}</div>
+  //             <div class="menu__item-divider"></div>
+  //             <div class="menu__item-price">
+  //                 <div class="menu__item-cost">Цена:</div>
+  //                 <div class="menu__item-total"><span>${price}</span> грн/день</div>
+  //             </div>
+  //         `;
+  //         document.querySelector(".menu .container").append(element);
+  //     });
+  // }
+
+  axios.get('http://localhost:3000/menu').then(data => {
+    data.data.forEach(({
       img,
       altimg,
       title,
       descr,
       price
     }) => {
-      const element = document.createElement('div');
-      element.classList.add('menu__item');
-      element.innerHTML = `
-                <img src=${img} alt=${altimg}>
-                <h3 class="menu__item-subtitle">${title}</h3>
-                <div class="menu__item-descr">${descr}</div>
-                <div class="menu__item-divider"></div>
-                <div class="menu__item-price">
-                    <div class="menu__item-cost">Цена:</div>
-                    <div class="menu__item-total"><span>${price}</span> грн/день</div>
-                </div>
-            `;
-      document.querySelector('.menu .container').append(element);
+      new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
     });
-  }
+  });
+
+  // Forms
+
   const forms = document.querySelectorAll('form');
   const message = {
     loading: 'img/form/spinner.svg',
-    success: 'Дякую! Скоро вам напишемо',
-    failure: 'Щось пішло не так...'
+    success: 'Спасибо! Скоро мы с вами свяжемся',
+    failure: 'Что-то пошло не так...'
   };
   forms.forEach(item => {
     bindPostData(item);
   });
   const postData = async (url, data) => {
-    const res = await fetch(url, {
+    let res = await fetch(url, {
       method: "POST",
       headers: {
-        'Content-type': 'application/json'
+        'Content-Type': 'application/json'
       },
       body: data
     });
     return await res.json();
   };
+  async function getResource(url) {
+    let res = await fetch(url);
+    if (!res.ok) {
+      throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+    }
+    return await res.json();
+  }
   function bindPostData(form) {
     form.addEventListener('submit', e => {
       e.preventDefault();
-      const statusMessage = document.createElement('img');
+      let statusMessage = document.createElement('img');
       statusMessage.src = message.loading;
       statusMessage.style.cssText = `
                 display: block;
                 margin: 0 auto;
             `;
       form.insertAdjacentElement('afterend', statusMessage);
-
-      // request.setRequestHeader('Content-type', 'application/json');
-      const formData = new FormData(form); //для роботи FormData у інпутів форми завжди повинен бути атрибут name
-
+      const formData = new FormData(form);
       const json = JSON.stringify(Object.fromEntries(formData.entries()));
       postData('http://localhost:3000/requests', json).then(data => {
         console.log(data);
@@ -269,7 +272,6 @@ window.addEventListener('DOMContentLoaded', () => {
       closeModal();
     }, 4000);
   }
-  fetch('http://localhost:3000/menu').then(data => data.json()).then(res => console.log(res));
 });
 /******/ })()
 ;
