@@ -1,6 +1,6 @@
-//Modal
-
 function modal() {
+    // Modal
+
     const modalTrigger = document.querySelectorAll('[data-modal]'),
         modal = document.querySelector('.modal');
 

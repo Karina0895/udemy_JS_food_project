@@ -1,7 +1,7 @@
-//Slider
-
 function slider() {
-       let offset = 0;
+    // Slider
+
+    let offset = 0;
     let slideIndex = 1;
 
     const slides = document.querySelectorAll('.offer__slide'),

@@ -1,16 +1,16 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./dist/js/modules/calculator.js":
-/*!***************************************!*\
-  !*** ./dist/js/modules/calculator.js ***!
-  \***************************************/
+/***/ "./js/modules/calc.js":
+/*!****************************!*\
+  !*** ./js/modules/calc.js ***!
+  \****************************/
 /***/ ((module) => {
 
-//Calculator
+function calc() {
+    // Calculator
 
-function calculator() {
-        const result = document.querySelector('.calculating__result span');
+    const result = document.querySelector('.calculating__result span');
     
     let sex, height, weight, age, ratio;
 
@@ -114,22 +114,23 @@ function calculator() {
     getDynamicInformation('#height');
     getDynamicInformation('#weight');
     getDynamicInformation('#age');
+
 }
 
-module.exports = calculator;
+module.exports = calc;
 
 /***/ }),
 
-/***/ "./dist/js/modules/cards.js":
-/*!**********************************!*\
-  !*** ./dist/js/modules/cards.js ***!
-  \**********************************/
+/***/ "./js/modules/cards.js":
+/*!*****************************!*\
+  !*** ./js/modules/cards.js ***!
+  \*****************************/
 /***/ ((module) => {
 
-//Cards
-
 function cards() {
-        class MenuCard {
+    // Используем классы для создание карточек меню
+
+    class MenuCard {
         constructor(src, alt, title, descr, price, parentSelector, ...classes) {
             this.src = src;
             this.alt = alt;
@@ -176,22 +177,32 @@ function cards() {
                 new MenuCard(img, altimg, title, descr, price, ".menu .container").render();
             });
         });
+
+    async function getResource(url) {
+        let res = await fetch(url);
+    
+        if (!res.ok) {
+            throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+        }
+    
+        return await res.json();
+    }
 }
 
 module.exports = cards;
 
 /***/ }),
 
-/***/ "./dist/js/modules/forms.js":
-/*!**********************************!*\
-  !*** ./dist/js/modules/forms.js ***!
-  \**********************************/
+/***/ "./js/modules/forms.js":
+/*!*****************************!*\
+  !*** ./js/modules/forms.js ***!
+  \*****************************/
 /***/ ((module) => {
 
-//Forms 
-
 function forms() {
-        const forms = document.querySelectorAll('form');
+    // Forms
+
+    const forms = document.querySelectorAll('form');
     const message = {
         loading: 'img/form/spinner.svg',
         success: 'Спасибо! Скоро мы с вами свяжемся',
@@ -214,15 +225,7 @@ function forms() {
         return await res.json();
     };
 
-    async function getResource(url) {
-        let res = await fetch(url);
-    
-        if (!res.ok) {
-            throw new Error(`Could not fetch ${url}, status: ${res.status}`);
-        }
-    
-        return await res.json();
-    }
+
 
     function bindPostData(form) {
         form.addEventListener('submit', (e) => {
@@ -281,15 +284,15 @@ module.exports = forms;
 
 /***/ }),
 
-/***/ "./dist/js/modules/modal.js":
-/*!**********************************!*\
-  !*** ./dist/js/modules/modal.js ***!
-  \**********************************/
+/***/ "./js/modules/modal.js":
+/*!*****************************!*\
+  !*** ./js/modules/modal.js ***!
+  \*****************************/
 /***/ ((module) => {
 
-//Modal
-
 function modal() {
+    // Modal
+
     const modalTrigger = document.querySelectorAll('[data-modal]'),
         modal = document.querySelector('.modal');
 
@@ -338,16 +341,16 @@ module.exports = modal;
 
 /***/ }),
 
-/***/ "./dist/js/modules/slider.js":
-/*!***********************************!*\
-  !*** ./dist/js/modules/slider.js ***!
-  \***********************************/
+/***/ "./js/modules/slider.js":
+/*!******************************!*\
+  !*** ./js/modules/slider.js ***!
+  \******************************/
 /***/ ((module) => {
 
-//Slider
-
 function slider() {
-       let offset = 0;
+    // Slider
+
+    let offset = 0;
     let slideIndex = 1;
 
     const slides = document.querySelectorAll('.offer__slide'),
@@ -501,16 +504,16 @@ module.exports = slider;
 
 /***/ }),
 
-/***/ "./dist/js/modules/tabs.js":
-/*!*********************************!*\
-  !*** ./dist/js/modules/tabs.js ***!
-  \*********************************/
+/***/ "./js/modules/tabs.js":
+/*!****************************!*\
+  !*** ./js/modules/tabs.js ***!
+  \****************************/
 /***/ ((module) => {
 
-// Tabs
-
 function tabs() {
-    let tabs = document.querySelectorAll('.tabheader__item'),
+    // Tabs
+    
+	let tabs = document.querySelectorAll('.tabheader__item'),
 		tabsContent = document.querySelectorAll('.tabcontent'),
 		tabsParent = document.querySelector('.tabheader__items');
 
@@ -552,15 +555,15 @@ module.exports = tabs;
 
 /***/ }),
 
-/***/ "./dist/js/modules/timer.js":
-/*!**********************************!*\
-  !*** ./dist/js/modules/timer.js ***!
-  \**********************************/
+/***/ "./js/modules/timer.js":
+/*!*****************************!*\
+  !*** ./js/modules/timer.js ***!
+  \*****************************/
 /***/ ((module) => {
 
-// Timer
-
 function timer() {
+    // Timer
+
     const deadline = '2022-06-11';
 
     function getTimeRemaining(endtime) {
@@ -648,28 +651,26 @@ module.exports = timer;
 /************************************************************************/
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
-/*!***************************!*\
-  !*** ./dist/js/script.js ***!
-  \***************************/
+/*!**********************!*\
+  !*** ./js/script.js ***!
+  \**********************/
+window.addEventListener('DOMContentLoaded', function() {
+    const tabs = __webpack_require__(/*! ./modules/tabs */ "./js/modules/tabs.js"),
+          modal = __webpack_require__(/*! ./modules/modal */ "./js/modules/modal.js"),
+          timer = __webpack_require__(/*! ./modules/timer */ "./js/modules/timer.js"),
+          cards = __webpack_require__(/*! ./modules/cards */ "./js/modules/cards.js"),
+          calc = __webpack_require__(/*! ./modules/calc */ "./js/modules/calc.js"),
+          forms = __webpack_require__(/*! ./modules/forms */ "./js/modules/forms.js"),
+          slider = __webpack_require__(/*! ./modules/slider */ "./js/modules/slider.js");
 
-window.addEventListener('DOMContentLoaded', function () {
-  const tabs = __webpack_require__(/*! ./modules/tabs */ "./dist/js/modules/tabs.js"),
-        modal = __webpack_require__(/*! ./modules/modal */ "./dist/js/modules/modal.js"),
-        timer = __webpack_require__(/*! ./modules/timer */ "./dist/js/modules/timer.js"),
-        cards = __webpack_require__(/*! ./modules/cards */ "./dist/js/modules/cards.js"),
-        calculator = __webpack_require__(/*! ./modules/calculator */ "./dist/js/modules/calculator.js"),
-        forms = __webpack_require__(/*! ./modules/forms */ "./dist/js/modules/forms.js"),
-        slider = __webpack_require__(/*! ./modules/slider */ "./dist/js/modules/slider.js");
-        
-  tabs();
-  modal();
-  timer();
-  cards();
-  calculator();
-  forms();
-  slider();      
+    tabs();
+    modal();
+    timer();
+    cards();
+    calc();
+    forms();
+    slider();
 });
-
 })();
 
 /******/ })()
